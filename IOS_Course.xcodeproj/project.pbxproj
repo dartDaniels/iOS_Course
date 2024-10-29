@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		64A39AB82CC84961001C3176 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 64A39AB72CC84961001C3176 /* SnapKit */; };
+		64B067262CCE583E00612233 /* CollectionViewPagingLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 64B067252CCE583E00612233 /* CollectionViewPagingLayout */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		64F55B302CABBF2400B703F1 /* IOS_Course.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IOS_Course.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64A39AB82CC84961001C3176 /* SnapKit in Frameworks */,
+				64B067262CCE583E00612233 /* CollectionViewPagingLayout in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = IOS_Course;
 			packageProductDependencies = (
+				64A39AB72CC84961001C3176 /* SnapKit */,
+				64B067252CCE583E00612233 /* CollectionViewPagingLayout */,
 			);
 			productName = IOS_Course;
 			productReference = 64F55B302CABBF2400B703F1 /* IOS_Course.app */;
@@ -107,6 +116,10 @@
 			);
 			mainGroup = 64F55B272CABBF2400B703F1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				64A39AB62CC84961001C3176 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				64B067242CCE583E00612233 /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 64F55B312CABBF2400B703F1 /* Products */;
 			projectDirPath = "";
@@ -150,7 +163,6 @@
 				INFOPLIST_FILE = IOS_Course/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -178,7 +190,6 @@
 				INFOPLIST_FILE = IOS_Course/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -335,6 +346,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		64A39AB62CC84961001C3176 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		64B067242CCE583E00612233 /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amirdew/CollectionViewPagingLayout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		64A39AB72CC84961001C3176 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64A39AB62CC84961001C3176 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		64B067252CCE583E00612233 /* CollectionViewPagingLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64B067242CCE583E00612233 /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */;
+			productName = CollectionViewPagingLayout;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64F55B282CABBF2400B703F1 /* Project object */;
 }
