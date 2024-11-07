@@ -10,29 +10,38 @@ import UIKit
 import CollectionViewPagingLayout
 
 class ImageCell: UICollectionViewCell {
-    func configurate(image: UIImage?, name: String?, description: String?) {
+    func configurate(image: UIImage, name: String) {
         imageView.image = image
         heroName.text = name
-        descript.text = description
-        
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initialize()
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init error")
+        fatalError("error")
     }
     
-    private let descript: UILabel = {
-        let description = UILabel()
-        description.font = UIFont.systemFont(ofSize: .init(32), weight: .bold)
-        description.textColor = .white
-        description.alpha = 0
-        return description
-    }()
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        heroName.text = nil
+
+    }
+    
+    private func setupViews() {
+        contentView.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 300, height: 550))
+        }
+        contentView.addSubview(heroName)
+        heroName.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(475)
+            make.leading.equalToSuperview().inset(30)
+        }
+    }
     
     private let imageView: UIImageView = {
         let view = UIImageView()
@@ -58,23 +67,7 @@ extension ImageCell: ScaleTransformView {
     }
 }
 
-private extension ImageCell {
-    func initialize() {
-        contentView.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 300, height: 550))
-        }
-        contentView.addSubview(heroName)
-        heroName.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(475)
-            make.leading.equalToSuperview().inset(30)
-        }
-        contentView.addSubview(descript)
-        descript.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(475)
-            make.leading.equalToSuperview().inset(30)
-        }
-    }
-}
+
+
 
 

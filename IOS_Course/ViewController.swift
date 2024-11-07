@@ -10,27 +10,25 @@ import UIKit
 import CollectionViewPagingLayout
 
 
-class ViewController: UIViewController, UICollectionViewDataSource {
-    
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addTriangleOverlay()
         view.backgroundColor = .customBlack
         makeCollectionView()
-        addSubviews()
+        setupView()
     }
     
-    var cellImages: [UIImage?] = [UIImage(named: "HeroOne"),
-                                  UIImage(named: "HeroTwo"),
-                                  UIImage(named: "HeroThree"),
+    var cellImages: [UIImage] = [UIImage(named: "HeroOne")!,
+                                  UIImage(named: "HeroTwo")!,
+                                  UIImage(named: "HeroThree")!
                                   ]
     
-    var heroNames: [String?] = ["Deadpool", "Iron Man", "Spider-Man"]
+    var heroNames: [String] = ["Deadpool", "Iron Man", "Spider-Man"]
     
     
     private var collectionView: UICollectionView!
-    //let layout = PagingCollectionViewLayout()
     let collectionLayout = CollectionViewPagingLayout()
 
     let logo: UIImageView = {
@@ -41,34 +39,16 @@ class ViewController: UIViewController, UICollectionViewDataSource {
     
     let label: UILabel = {
         let label = UILabel()
-        label.text = "Choose your hero"
-        label.font = UIFont.systemFont(ofSize: .init(28), weight: .bold)
+        label.text = Constants.labelText
+        label.font = Constants.firstFont
         label.textColor = .white
         return label
     }()
     
-    private func addTriangleOverlay() {
-            let shapeLayer = CAShapeLayer()
-            let trianglePath = UIBezierPath()
-            
-            let startPoint = CGPoint(x: -58, y: 900)
-            let secondPoint = CGPoint(x: 500, y: 900)
-            let thirdPoint = CGPoint(x: view.bounds.midX+255, y: view.bounds.midY-170)
-            
-            trianglePath.move(to: startPoint)
-            trianglePath.addLine(to: secondPoint)
-            trianglePath.addLine(to: thirdPoint)
-            trianglePath.close()
-            
-            shapeLayer.path = trianglePath.cgPath
-            shapeLayer.fillColor = UIColor.customRedOne.cgColor
-            shapeLayer.lineWidth = 2
-            
-            view.layer.addSublayer(shapeLayer)
-        }
+
     
     
-    func addSubviews() {
+    func setupView() {
         
         view.addSubview(logo)
         logo.snp.makeConstraints { make in
@@ -101,15 +81,11 @@ class ViewController: UIViewController, UICollectionViewDataSource {
         collectionView.isPagingEnabled = true
         collectionLayout.numberOfVisibleItems = nil
         
-//        layout.itemSize = CGSize(width: 300, height: 550)
-//        layout.minimumLineSpacing = 0
-//        layout.scrollDirection = .horizontal
-//        layout.numberOfItemsPerPage = 1
-        
         collectionView.showsHorizontalScrollIndicator = false
         
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -118,7 +94,8 @@ class ViewController: UIViewController, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! ImageCell
-        cell.configurate(image: cellImages[indexPath.item], name: heroNames[indexPath.item], description: "hell")
+        
+        cell.configurate(image: cellImages[indexPath.item], name: heroNames[indexPath.item])
         return cell
     }
 
