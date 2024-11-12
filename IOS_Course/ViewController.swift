@@ -18,6 +18,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         view.backgroundColor = .customBlack
         makeCollectionView()
         setupView()
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
     
     var cellImages: [UIImage] = [UIImage(named: "HeroOne")!,
@@ -45,8 +48,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return label
     }()
     
-
-    
     
     func setupView() {
         
@@ -65,17 +66,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(45)
-            make.size.equalTo(CGSize(width: 300, height: 550))
+            make.width.equalToSuperview()
+            make.height.equalToSuperview()
             make.top.equalToSuperview().inset(203)
-            make.centerX.equalToSuperview()
+            
         }
     }
     
     private func makeCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
-        collectionView.backgroundColor = .customBlack
-        collectionView.layer.cornerRadius = 10
+        collectionView.backgroundColor = .clear
         
         collectionView.collectionViewLayout = collectionLayout
         collectionView.isPagingEnabled = true
@@ -83,9 +83,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         collectionView.showsHorizontalScrollIndicator = false
         
-        collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.dataSource = self
-        collectionView.delegate = self
+        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
+        addTriangleOverlay()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -93,11 +92,19 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! ImageCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomCollectionViewCell.identifier, for: indexPath)
+                as? CustomCollectionViewCell else {
+                    fatalError("Could not dequeue ImageCell")
+                }
         
-        cell.configurate(image: cellImages[indexPath.item], name: heroNames[indexPath.item])
+        let image = self.cellImages[indexPath.row]
+        let name = self.heroNames[indexPath.row]
+        cell.configurate(image: image, name: name)
         return cell
+
     }
+    
+    
 
 
 }
