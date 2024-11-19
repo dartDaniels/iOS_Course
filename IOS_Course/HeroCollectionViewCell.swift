@@ -9,12 +9,12 @@ import SnapKit
 import UIKit
 import CollectionViewPagingLayout
 
-class CustomCollectionViewCell: UICollectionViewCell {
+class HeroCollectionViewCell: UICollectionViewCell {
     static let identifier = "ImageCell"
     
-    func configurate(image: UIImage, name: String) {
+    func configurate(image: UIImage, heroName: String) {
         self.imageView.image = image
-        self.heroName.text = name
+        self.heroName.text = heroName
     }
     
     override init(frame: CGRect) {
@@ -24,14 +24,6 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupViews()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.imageView.image = nil
-        self.heroName.text = nil
-
     }
     
     private func setupViews() {
@@ -40,13 +32,12 @@ class CustomCollectionViewCell: UICollectionViewCell {
             make.size.equalTo(CGSize(width: 300, height: 550))
             make.leading.trailing.equalToSuperview().inset(45)
         }
-        contentView.addSubview(heroName)
+        imageView.addSubview(heroName)
         heroName.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(475)
-            make.leading.equalToSuperview().inset(75)
+            make.leading.equalToSuperview().inset(30)
         }
     }
-    
     
     private let imageView: UIImageView = {
         let view = UIImageView()
@@ -56,15 +47,16 @@ class CustomCollectionViewCell: UICollectionViewCell {
     }()
     
     private let heroName: UILabel = {
-        let heroName = UILabel()
-        heroName.font = UIFont.systemFont(ofSize: .init(32), weight: .bold)
-        heroName.textColor = .white
-        return heroName
+        let name = UILabel()
+        name.font = UIFont.systemFont(ofSize: .init(32), weight: .bold)
+        name.textColor = .white
+        name.isHidden = false
+        return name
     }()
     
 }
 
-extension CustomCollectionViewCell: ScaleTransformView {
+extension HeroCollectionViewCell: ScaleTransformView {
     var scaleOptions: ScaleTransformViewOptions {
         ScaleTransformViewOptions(minScale: 0.6,
                                   scaleRatio: 0.4,

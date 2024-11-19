@@ -6,15 +6,19 @@
 //
 
 import UIKit
-
-extension ViewController {
+class TriangleView: UIView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        addTriangleOverlay()
+    }
+    
     func addTriangleOverlay() {
         let shapeLayer = CAShapeLayer()
         let trianglePath = UIBezierPath()
         
-        let startPoint = CGPoint(x: -58, y: 900)
-        let secondPoint = CGPoint(x: 500, y: 900)
-        let thirdPoint = CGPoint(x: view.bounds.midX+255, y: view.bounds.midY-170)
+        let startPoint = CGPoint(x: bounds.minX, y: bounds.height)
+        let secondPoint = CGPoint(x: bounds.width, y: bounds.height)
+        let thirdPoint = CGPoint(x: bounds.width, y: bounds.midY*0.75)
         
         trianglePath.move(to: startPoint)
         trianglePath.addLine(to: secondPoint)
@@ -24,7 +28,9 @@ extension ViewController {
         shapeLayer.path = trianglePath.cgPath
         shapeLayer.fillColor = UIColor.customRedOne.cgColor
         
-        view.layer.addSublayer(shapeLayer)
+        layer.sublayers?.removeAll(where: { $0 is CAShapeLayer })
+        layer.addSublayer(shapeLayer)
     }
 }
+
  
