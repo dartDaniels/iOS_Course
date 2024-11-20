@@ -21,54 +21,8 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         collectionView.dataSource = self
     }
     
-    var cellImages: [UIImage] = [UIImage(named: "HeroOne") ?? UIImage(),
-                                  UIImage(named: "HeroTwo") ?? UIImage(),
-                                  UIImage(named: "HeroThree") ?? UIImage()
-                                  ]
-    
-    let heroNames: [String] = ["Deadpool", "Iron Man", "Spider-Man"]
-    
-    let heroDescriptions = ["Please don’t make the super suit green...or animated!",
-                            "I AM IRON MAN",
-                            "In iron suit"]
+    let heroModel = HeroModel()
     let triangleView = TriangleView()
-    
-    private var secondStateView: SecondStateView!
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            print("Нажата карточка героя: \(heroNames[indexPath.item])")
-        showHeroDetail(image: cellImages[indexPath.item], name: heroNames[indexPath.item], description: heroDescriptions[indexPath.item])
-        }
-    
-    private func showHeroDetail(image: UIImage, name: String, description: String) {
-        let secondStateView = SecondStateView()
-        self.secondStateView = secondStateView
-        secondStateView.configure(heroImage: image, heroName: name, heroDesc: description, onClose: { [weak self] in
-            self?.hideHeroDetail()
-        })
-        view.addSubview(secondStateView)
-        view.bringSubviewToFront(secondStateView)
-        
-        secondStateView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        secondStateView.alpha = 0
-        UIView.animate(withDuration: 0.3) {
-            secondStateView.alpha = 1
-        }
-    }
-    
-    private func hideHeroDetail() {
-           UIView.animate(withDuration: 0.3, animations: {
-               self.secondStateView?.alpha = 0
-           }, completion: { _ in
-               self.secondStateView?.removeFromSuperview()
-               self.secondStateView = nil
-           })
-       }
-    
-    
-    
     
     private var collectionView: UICollectionView!
     let collectionLayout = CollectionViewPagingLayout()
@@ -86,7 +40,6 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         label.textColor = .white
         return label
     }()
-    
     
     func setupView() {
         view.addSubview(triangleView)
@@ -113,10 +66,8 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
             make.height.equalToSuperview()
             make.top.equalToSuperview().inset(203)
         }
-
     }
 
-    
     private func makeCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
         collectionView.backgroundColor = .clear
@@ -130,7 +81,7 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        cellImages.count
+        heroModel.cellImages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -140,8 +91,8 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
             return UICollectionViewCell()
         }
         
-        let image = self.cellImages[indexPath.item]
-        let heroName = self.heroNames[indexPath.item]
+        let image = heroModel.cellImages[indexPath.item]
+        let heroName = heroModel.heroNames[indexPath.item]
         cell.configurate(image: image, heroName: heroName)
         return cell
     }
