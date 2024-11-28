@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HeroModel {
-    let cellImages: [UIImage] = [UIImage(named: "HeroOne") ?? UIImage(),
-                                  UIImage(named: "HeroTwo") ?? UIImage(),
-                                  UIImage(named: "HeroThree") ?? UIImage()
-                                  ]
+    
     let heroNames: [String] = ["Deadpool", "Iron Man", "Spider-Man"]
     
-    let heroDescriptions: [String] = ["Please don’t make the super suit green...or animated!",
+    let heroDescriptions: [String] = ["Please don’t make the super\n suit green...or animated!",
                             "I AM IRON MAN",
-                            "In iron suit"]
+                            "In iron suit"
+                            ]
+    
+    let heroURL: [String] = ["https://iili.io/JMnAfIV.png",
+                             "https://iili.io/JMnuDI2.png",
+                             "https://iili.io/JMnuyB9.png"
+                            ]
 }

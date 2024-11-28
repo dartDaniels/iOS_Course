@@ -8,12 +8,22 @@
 import SnapKit
 import UIKit
 import CollectionViewPagingLayout
+import Kingfisher
 
 class HeroCollectionViewCell: UICollectionViewCell {
-    static let identifier = "ImageCell"
+    static let identifier = "HeroCollectionViewCell"
     
-    func configurate(image: UIImage, heroName: String) {
-        self.imageView.image = image
+    let heroModel = HeroModel()
+
+    func configurate(image: String, heroName: String) {
+        if let url = URL(string: image) {
+            self.imageView.image = nil
+            self.imageView.kf.indicatorType = .activity
+            if let indicator = imageView.kf.indicator as? UIActivityIndicatorView {
+                indicator.startAnimating()
+            }
+            self.imageView.kf.setImage(with: url)
+        }
         self.heroName.text = heroName
     }
     
@@ -41,8 +51,10 @@ class HeroCollectionViewCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let view = UIImageView()
+        view.contentMode = .scaleToFill
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
+        view.isHidden = false
         return view
     }()
     
@@ -56,12 +68,4 @@ class HeroCollectionViewCell: UICollectionViewCell {
     
 }
 
-extension HeroCollectionViewCell: ScaleTransformView {
-    var scaleOptions: ScaleTransformViewOptions {
-        ScaleTransformViewOptions(minScale: 0.6,
-                                  scaleRatio: 0.4,
-                                  translationRatio: CGPoint(x: 0.66, y: 0.2),
-                                  maxTranslationRatio: CGPoint(x: 2, y: 0)
-        )
-    }
-}
+extension HeroCollectionViewCell: Placeholder {}

@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 import CollectionViewPagingLayout
-
+import Kingfisher
 
 class HeroListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -19,14 +19,31 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         setupView()
         collectionView.delegate = self
         collectionView.dataSource = self
+
+    }
+    
+    func createPagingLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .fractionalHeight(1))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPagingCentered
+        section.interGroupSpacing = 0
+
+        return UICollectionViewCompositionalLayout(section: section)
     }
     
     let heroModel = HeroModel()
     let triangleView = TriangleView()
     
     private var collectionView: UICollectionView!
-    let collectionLayout = CollectionViewPagingLayout()
-
+    
     let logo: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(named: "Logo")
@@ -69,19 +86,21 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
     }
 
     private func makeCollectionView() {
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
+        let layout = CollectionViewPagingLayout()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createPagingLayout())
         collectionView.backgroundColor = .clear
         
         collectionView.isPagingEnabled = true
-        collectionLayout.numberOfVisibleItems = nil
+        layout.numberOfVisibleItems = nil
         
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        heroModel.cellImages.count
+        heroModel.heroURL.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -91,10 +110,23 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
             return UICollectionViewCell()
         }
         
-        let image = heroModel.cellImages[indexPath.item]
+        let heroURL = heroModel.heroURL[indexPath.item]
         let heroName = heroModel.heroNames[indexPath.item]
-        cell.configurate(image: image, heroName: heroName)
+
+        cell.configurate(image: heroURL, heroName: heroName)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let secondViewController = SecondStateViewController()
+        secondViewController.modalPresentationStyle = .fullScreen
+
+        let heroURL = heroModel.heroURL[indexPath.item]
+        let heroName = heroModel.heroNames[indexPath.item]
+        let heroDescriptions = heroModel.heroDescriptions[indexPath.item]
+
+        secondViewController.configure(heroImage: heroURL, heroName: heroName, heroDesc: heroDescriptions)
+        present(secondViewController, animated: true, completion: nil)
     }
 }
 
