@@ -6,31 +6,42 @@
 //
 
 import UIKit
+
 class TriangleView: UIView {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        addTriangleOverlay()
+    var fillColor: UIColor = Colors.customRed {
+        didSet {
+            setNeedsLayout()
+        }
     }
     
-    func addTriangleOverlay() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        configureTriangle()
+    }
+    
+    private func configureTriangle() {
         let shapeLayer = CAShapeLayer()
-        let trianglePath = UIBezierPath()
+        shapeLayer.path = createTrianglePath().cgPath
+        shapeLayer.fillColor = fillColor.cgColor
         
+        layer.sublayers?.removeAll(where: { $0 is CAShapeLayer })
+        layer.addSublayer(shapeLayer)
+    }
+    
+    private func createTrianglePath() -> UIBezierPath {
+        let trianglePath = UIBezierPath()
         let startPoint = CGPoint(x: bounds.minX, y: bounds.height)
         let secondPoint = CGPoint(x: bounds.width, y: bounds.height)
-        let thirdPoint = CGPoint(x: bounds.width, y: bounds.midY*0.75)
+        let thirdPoint = CGPoint(x: bounds.width, y: bounds.midY * 0.75)
         
         trianglePath.move(to: startPoint)
         trianglePath.addLine(to: secondPoint)
         trianglePath.addLine(to: thirdPoint)
         trianglePath.close()
         
-        shapeLayer.path = trianglePath.cgPath
-        shapeLayer.fillColor = UIColor.customRedOne.cgColor
-        
-        layer.sublayers?.removeAll(where: { $0 is CAShapeLayer })
-        layer.addSublayer(shapeLayer)
+        return trianglePath
     }
 }
+
 
  

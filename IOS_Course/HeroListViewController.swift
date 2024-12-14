@@ -12,21 +12,21 @@ import Kingfisher
 
 class HeroListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    private var viewModel = HeroViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBlack
-        makeCollectionView()
+        view.backgroundColor = Colors.customBlack
+        setupCollectionView()
         setupView()
         collectionView.delegate = self
         collectionView.dataSource = self
-
     }
     
     func createPagingLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                                heightDimension: .fractionalHeight(1))
@@ -34,28 +34,33 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
 
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
-        section.interGroupSpacing = 0
 
         return UICollectionViewCompositionalLayout(section: section)
     }
     
-    let heroModel = HeroModel()
     let triangleView = TriangleView()
     
     private var collectionView: UICollectionView!
     
     let logo: UIImageView = {
         let logo = UIImageView()
-        logo.image = UIImage(named: "Logo")
+        logo.image = Images.logo
         return logo
     }()
     
-    let label: UILabel = {
+    let chooseHeroLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.labelText
-        label.font = Constants.firstFont
+        label.text = Strings.chooseHeroText
+        label.font = Fonts.bodyFont
         label.textColor = .white
         return label
+    }()
+    
+    let backButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "", style: .done, target: self, action: nil)
+        button.tintColor = .white
+        
+        return button
     }()
     
     func setupView() {
@@ -66,14 +71,14 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         
         view.addSubview(logo)
         logo.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(60)
+            make.top.equalToSuperview().inset(screenSize.screenHeight/14.0666)
             make.centerX.equalToSuperview()
-            make.size.equalTo(CGSize(width: 127, height: 27))
+            make.size.equalTo(CGSize(width: screenSize.screenWidth/3.07, height: screenSize.screenHeight/31.260))
         }
         
-        view.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(111)
+        view.addSubview(chooseHeroLabel)
+        chooseHeroLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(screenSize.screenHeight/7.603)
             make.centerX.equalToSuperview()
         }
         
@@ -81,55 +86,46 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         collectionView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalToSuperview()
-            make.top.equalToSuperview().inset(203)
+            make.top.equalToSuperview().inset(screenSize.screenHeight/4.158)
         }
     }
 
-    private func makeCollectionView() {
-        let layout = CollectionViewPagingLayout()
+    private func setupCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createPagingLayout())
         collectionView.backgroundColor = .clear
-        
-        collectionView.isPagingEnabled = true
-        layout.numberOfVisibleItems = nil
-        
+                
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isScrollEnabled = false
         
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
     }
     
+}
+
+extension HeroListViewController {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        heroModel.heroURL.count
+        viewModel.numberOfHeroes
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath)
                 as? HeroCollectionViewCell else {
             assertionFailure("couldn't dequeue cell")
             return UICollectionViewCell()
         }
-        
-        let heroURL = heroModel.heroURL[indexPath.item]
-        let heroName = heroModel.heroNames[indexPath.item]
 
-        cell.configurate(image: heroURL, heroName: heroName)
+        cell.configurate(with: viewModel, at: indexPath.item)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let secondViewController = SecondStateViewController()
-        secondViewController.modalPresentationStyle = .fullScreen
+        let heroCardViewController = HeroCardViewController()
 
-        let heroURL = heroModel.heroURL[indexPath.item]
-        let heroName = heroModel.heroNames[indexPath.item]
-        let heroDescriptions = heroModel.heroDescriptions[indexPath.item]
+        navigationController?.pushViewController(heroCardViewController, animated: true)
+        navigationItem.backBarButtonItem = backButton
 
-        secondViewController.configure(heroImage: heroURL, heroName: heroName, heroDesc: heroDescriptions)
-        present(secondViewController, animated: true, completion: nil)
+        heroCardViewController.configure(with: viewModel, at: indexPath.item)
     }
 }
-
 
 
 

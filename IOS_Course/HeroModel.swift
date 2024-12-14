@@ -8,17 +8,12 @@
 import UIKit
 import Kingfisher
 
-class HeroModel {
+struct HeroModel {
+    let heroName: String
+    let heroDescription: String
+    let heroURL: String
     
-    let heroNames: [String] = ["Deadpool", "Iron Man", "Spider-Man"]
-    
-    let heroDescriptions: [String] = ["Please don’t make the super\n suit green...or animated!",
-                            "I AM IRON MAN",
-                            "In iron suit"
-                            ]
-    
-    let heroURL: [String] = ["https://iili.io/JMnAfIV.png",
-                             "https://iili.io/JMnuDI2.png",
-                             "https://iili.io/JMnuyB9.png"
-                            ]
+    static let Heroes: [HeroModel] = [ HeroModel(heroName: "Deadpool", heroDescription: "Please don’t make the super\n suit green...or   animated!", heroURL: "https://iili.io/JMnAfIV.png"),
+                                       HeroModel(heroName: "Iron Man", heroDescription: "I AM IRON MAN", heroURL: "https://iili.io/JMnuDI2.png"),
+                                       HeroModel(heroName: "Spider-Man", heroDescription: "In iron suit", heroURL: "https://iili.io/JMnuyB9.png")]
 }

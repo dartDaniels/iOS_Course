@@ -13,18 +13,17 @@ import Kingfisher
 class HeroCollectionViewCell: UICollectionViewCell {
     static let identifier = "HeroCollectionViewCell"
     
-    let heroModel = HeroModel()
+    let viewModel = HeroViewModel()
 
-    func configurate(image: String, heroName: String) {
-        if let url = URL(string: image) {
-            self.imageView.image = nil
-            self.imageView.kf.indicatorType = .activity
-            if let indicator = imageView.kf.indicator as? UIActivityIndicatorView {
-                indicator.startAnimating()
-            }
-            self.imageView.kf.setImage(with: url)
-        }
-        self.heroName.text = heroName
+    func configurate(with viewModel: HeroViewModel, at index: Int) {
+        let hero = viewModel.getHero(at: index)
+        heroName.text = hero.heroName
+                
+        viewModel.ImageLoader(from: hero.heroURL, for: imageView, placeholder: Images.heroPlaceholder) { [weak self] image in
+                    DispatchQueue.main.async {
+                        self?.imageView.image = image
+                    }
+                }
     }
     
     override init(frame: CGRect) {
@@ -39,13 +38,13 @@ class HeroCollectionViewCell: UICollectionViewCell {
     private func setupViews() {
         contentView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 300, height: 550))
-            make.leading.trailing.equalToSuperview().inset(45)
+            make.size.equalTo(CGSize(width: screenSize.screenBoundsSize.width/3, height: screenSize.screenBoundsSize.height/1.5))
+            make.leading.trailing.equalToSuperview().inset(screenSize.screenWidth/8.667)
         }
         imageView.addSubview(heroName)
         heroName.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(475)
-            make.leading.equalToSuperview().inset(30)
+            make.top.equalToSuperview().inset(screenSize.screenHeight/1.75)
+            make.leading.equalToSuperview().inset(screenSize.screenWidth/13)
         }
     }
     
@@ -60,12 +59,9 @@ class HeroCollectionViewCell: UICollectionViewCell {
     
     private let heroName: UILabel = {
         let name = UILabel()
-        name.font = UIFont.systemFont(ofSize: .init(32), weight: .bold)
+        name.font = Fonts.largeTitle
         name.textColor = .white
         name.isHidden = false
         return name
     }()
-    
 }
-
-extension HeroCollectionViewCell: Placeholder {}
