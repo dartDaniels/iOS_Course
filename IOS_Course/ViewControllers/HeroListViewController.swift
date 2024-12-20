@@ -13,6 +13,32 @@ import Kingfisher
 class HeroListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     private var viewModel = HeroViewModel()
+    private var heroes: [HeroModel] = []
+    
+    private let loaderView: UIView = {
+        let loaderView = UIView()
+        loaderView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        loaderView.layer.cornerRadius = 10
+        loaderView.clipsToBounds = true
+        
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        loaderView.addSubview(blurView)
+        
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .black
+        activityIndicator.startAnimating()
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loaderView.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: loaderView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: loaderView.centerYAnchor)
+        ])
+        
+        return loaderView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +47,30 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         setupView()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        showLoader()
+        
+        viewModel.reloadData = { [weak self] in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+                self?.hideLoader()
+            }
+        }
+        
+        viewModel.fetchHeroes()
+    }
+    
+    private func showLoader() {
+        DispatchQueue.main.async {
+            self.loaderView.frame = self.view.bounds
+            self.view.addSubview(self.loaderView)
+        }
+    }
+        
+    private func hideLoader() {
+        DispatchQueue.main.async {
+            self.loaderView.removeFromSuperview()
+        }
     }
     
     func createPagingLayout() -> UICollectionViewCompositionalLayout {
@@ -99,7 +149,6 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
     }
-    
 }
 
 extension HeroListViewController {

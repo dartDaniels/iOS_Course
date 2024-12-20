@@ -11,7 +11,36 @@ import UIKit
 
 class HeroViewModel {
     
-    private var heroes: [HeroModel] = HeroModel.Heroes
+    private var heroes: [HeroModel] = []
+    private var heroDescription: String?
+    
+    var reloadData: (() -> Void)?
+    var onHeroDescriptionLoaded: ((String?) -> Void)?
+    
+    func fetchHeroes() {
+            MarvelManager.shared.fetchHeroes { [weak self] result in
+                switch result {
+                case .success(let heroList):
+                    self?.heroes = heroList
+                    self?.reloadData?()
+                case .failure(let error):
+                    print("Ошибка при получении героев: \(error.localizedDescription)")
+                }
+            }
+        }
+    
+    func fetchHeroDescription(characterId: Int) {
+            MarvelManager.shared.fetchHeroDetails(characterId: characterId) { [weak self] result in
+                switch result {
+                case .success(let heroDetails):
+                    self?.heroDescription = heroDetails.description
+                    self?.onHeroDescriptionLoaded?(heroDetails.description)
+                case .failure(let error):
+                    print("Ошибка при получении описания героя: \(error.localizedDescription)")
+                    self?.onHeroDescriptionLoaded?(nil)
+                }
+            }
+        }
     
     var numberOfHeroes: Int {
         return heroes.count

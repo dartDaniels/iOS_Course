@@ -17,14 +17,14 @@ class HeroCollectionViewCell: UICollectionViewCell {
 
     func configurate(with viewModel: HeroViewModel, at index: Int) {
         let hero = viewModel.getHero(at: index)
-        heroName.text = hero.heroName
+        heroName.text = hero.name
                 
-        viewModel.ImageLoader(from: hero.heroURL, for: imageView, placeholder: Images.heroPlaceholder) { [weak self] image in
-                    DispatchQueue.main.async {
-                        self?.imageView.image = image
-                    }
+        if let fullImageURL = hero.thumbnail.fullURL, let url = URL(string: fullImageURL) {
+                    imageView.kf.setImage(with: url, placeholder: Images.heroPlaceholder)
+                } else {
+                    imageView.image = Images.heroPlaceholder
                 }
-    }
+            }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
