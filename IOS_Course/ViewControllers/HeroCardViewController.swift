@@ -22,35 +22,54 @@ class HeroCardViewController: UIViewController {
     func configure(with viewModel: HeroViewModel, at index: Int) {
             self.viewModel = viewModel
             self.heroIndex = index
-            
-            let hero = viewModel.getHero(at: index)
-            heroLabel.text = hero.name
-            
-            if let fullImageURL = hero.thumbnail.fullURL, let url = URL(string: fullImageURL) {
-                heroView.kf.setImage(with: url, placeholder: Images.heroPlaceholder)
-            } else {
-                heroView.image = Images.heroPlaceholder
-            }
+            setupHeroData()
+            fetchHeroDetails()
         }
+    
+    private func setupHeroData() {
+        let hero = viewModel.getHero(at: heroIndex)
+        heroLabel.text = hero.name
+        
+        if let fullImageURL = hero.thumbnail?.fullURL {
+            viewModel.ImageLoader(from: fullImageURL, for: heroView, placeholder: Images.heroPlaceholder) { [weak self] image in
+                self?.heroView.image = image ?? Images.heroPlaceholder
+            }
+        } else {
+            heroView.image = Images.heroPlaceholder
+        }
+    }
+
     
     private func fetchHeroDetails() {
         let hero = viewModel.getHero(at: heroIndex)
-        
         let characterId = hero.id
-        
+
         if characterId == 0 {
             heroDescription.text = "Описание недоступно"
             return
         }
-        
+
+        if let savedDescription = viewModel.fetchHeroDescriptionFromLocalStorage(heroId: characterId) {
+            heroDescription.text = savedDescription
+        } else {
+            heroDescription.text = "Загружаем описание..."
+        }
+
         viewModel.fetchHeroDescription(characterId: characterId)
-        
+
         viewModel.onHeroDescriptionLoaded = { [weak self] description in
             DispatchQueue.main.async {
-                self?.heroDescription.text = description ?? "Описание недоступно"
+                if let description = description, !description.isEmpty {
+                    self?.heroDescription.text = description
+                    self?.viewModel.saveHeroDescriptionToLocalStorage(heroId: characterId, description: description)
+                } else {
+                    self?.heroDescription.text = "Описание недоступно"
+                }
             }
         }
     }
+
+
     
     private let heroView: UIImageView = {
         let view = UIImageView()

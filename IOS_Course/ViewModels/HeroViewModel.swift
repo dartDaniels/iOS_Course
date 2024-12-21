@@ -8,6 +8,8 @@
 import Foundation
 import Kingfisher
 import UIKit
+import CoreData
+import RealmSwift
 
 class HeroViewModel {
     
@@ -23,24 +25,65 @@ class HeroViewModel {
                 case .success(let heroList):
                     self?.heroes = heroList
                     self?.reloadData?()
-                case .failure(let error):
-                    print("Ошибка при получении героев: \(error.localizedDescription)")
+                    self?.saveHeroesToLocalStorage()
+                case .failure:
+                    let heroesFromLocal = self?.fetchHeroesFromLocalStorage()
+                    if let heroesFromLocal = heroesFromLocal, !heroesFromLocal.isEmpty {
+                        self?.heroes = heroesFromLocal
+                        self?.reloadData?()
+                    } else {
+                        self?.reloadData?()
+                    }
                 }
             }
         }
     
-    func fetchHeroDescription(characterId: Int) {
-            MarvelManager.shared.fetchHeroDetails(characterId: characterId) { [weak self] result in
-                switch result {
-                case .success(let heroDetails):
-                    self?.heroDescription = heroDetails.description
-                    self?.onHeroDescriptionLoaded?(heroDetails.description)
-                case .failure(let error):
-                    print("Ошибка при получении описания героя: \(error.localizedDescription)")
-                    self?.onHeroDescriptionLoaded?(nil)
-                }
+    func saveHeroesToLocalStorage() {
+            for hero in heroes {
+                saveHeroToLocalStorage(hero: hero)
             }
         }
+    
+    func fetchHeroDescription(characterId: Int) {
+        MarvelManager.shared.fetchHeroDetails(characterId: characterId) { [weak self] result in
+            switch result {
+            case .success(let heroDetails):
+                let description = heroDetails.description
+                self?.heroDescription = description
+                self?.onHeroDescriptionLoaded?(description)
+            case .failure:
+                self?.onHeroDescriptionLoaded?(nil)
+            }
+        }
+    }
+    
+    
+    
+    func saveHeroes(heroes: [HeroModel]) {
+        do {
+            let realm = try Realm()
+            try realm.write {
+                realm.add(heroes, update: .modified)
+            }
+        } catch {
+            print("Ошибка при сохранении героев: \(error.localizedDescription)")
+        }
+    }
+    
+    func fetchHeroesFromRealm() -> [HeroModel]? {
+        do {
+            let realm = try Realm()
+            let heroes = realm.objects(HeroModel.self)
+            return Array(heroes)
+        } catch {
+            print("Ошибка при получении данных: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func getHeroes() -> [HeroModel] {
+        return heroes
+    }
     
     var numberOfHeroes: Int {
         return heroes.count
@@ -83,6 +126,51 @@ class HeroViewModel {
                 }
             }
             
+        }
+    }
+    
+    func saveHeroToLocalStorage(hero: HeroModel) {
+            let realm = try! Realm()
+            
+            let heroEntity = HeroModel()
+            heroEntity.id = hero.id
+            heroEntity.name = hero.name
+            heroEntity.heroDescription = hero.description
+            heroEntity.thumbnail = hero.thumbnail
+            
+            try! realm.write {
+                realm.add(heroEntity, update: .modified)
+            }
+        }
+    
+    func fetchHeroDescriptionFromLocalStorage(heroId: Int) -> String? {
+        let realm = try! Realm()
+        if let heroEntity = realm.objects(HeroModel.self).filter("id == \(heroId)").first {
+            return heroEntity.heroDescription
+        }
+        return heroDescription
+    }
+    
+    func fetchHeroesFromLocalStorage() -> [HeroModel]? {
+        let realm = try! Realm()
+        let heroes = realm.objects(HeroModel.self)
+        
+        return Array(heroes)
+    }
+    func saveHeroDescriptionToLocalStorage(heroId: Int, description: String) {
+        let realm = try! Realm()
+        
+        if let heroEntity = realm.objects(HeroModel.self).filter("id == \(heroId)").first {
+            try! realm.write {
+                heroEntity.heroDescription = description
+            }
+        } else {
+            let heroEntity = HeroModel()
+            heroEntity.id = heroId
+            heroEntity.heroDescription = description
+            try! realm.write {
+                realm.add(heroEntity, update: .modified)
+            }
         }
     }
 }

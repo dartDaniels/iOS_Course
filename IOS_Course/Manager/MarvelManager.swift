@@ -25,52 +25,51 @@ final class MarvelManager {
     }
 
     func fetchHeroes(completion: @escaping (Result<[HeroModel], Error>) -> Void) {
-        let endpoint = "/characters"
-        
-        let parameters: Parameters = [
-            "ts": timestamp,
-            "apikey": publicKey,
-            "hash": hash
-        ]
-        
-        AF.request(baseURL + endpoint, parameters: parameters)
-            .validate()
-            .responseDecodable(of: HeroList.self) { response in
-                switch response.result {
-                case .success(let heroListResponse):
-                    completion(.success(heroListResponse.data.results))
-                case .failure(let error):
-                    completion(.failure(error))
+            let endpoint = "/characters"
+            
+            let parameters: Parameters = [
+                "ts": timestamp,
+                "apikey": publicKey,
+                "hash": hash
+            ]
+            
+            AF.request(baseURL + endpoint, parameters: parameters)
+                .validate()
+                .responseDecodable(of: HeroList.self) { response in
+                    switch response.result {
+                    case .success(let heroListResponse):
+                        completion(.success(heroListResponse.data.results))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
-            }
-    }
+        }
     
     func fetchHeroDetails(characterId: Int, completion: @escaping (Result<HeroModel, Error>) -> Void) {
-        let endpoint = "/characters/\(characterId)"
-        
-        let parameters: Parameters = [
-            "ts": timestamp,
-            "apikey": publicKey,
-            "hash": hash
-        ]
-        
-        AF.request(baseURL + endpoint, parameters: parameters)
-            .validate()
-            .responseDecodable(of: HeroList.self) { response in
-                switch response.result {
-                case .success(let heroListResponse):
-                    guard let heroDetails = heroListResponse.data.results.first else {
-                        completion(.failure(NSError(domain: "MarvelManagerError", code: 404, userInfo: [NSLocalizedDescriptionKey: "Hero details not found"])))
-                        return
+            let endpoint = "/characters/\(characterId)"
+            
+            let parameters: Parameters = [
+                "ts": timestamp,
+                "apikey": publicKey,
+                "hash": hash
+            ]
+            
+            AF.request(baseURL + endpoint, parameters: parameters)
+                .validate()
+                .responseDecodable(of: HeroList.self) { response in
+                    switch response.result {
+                    case .success(let heroListResponse):
+                        guard let heroDetails = heroListResponse.data.results.first else {
+                            completion(.failure(NSError(domain: "MarvelManagerError", code: 404, userInfo: [NSLocalizedDescriptionKey: "Hero details not found"])))
+                            return
+                        }
+                        completion(.success(heroDetails))
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
-                    completion(.success(heroDetails))
-                case .failure(let error):
-                    completion(.failure(error))
                 }
-            }
+        }
     }
-}
-
 
 extension String {
     var md5: String {

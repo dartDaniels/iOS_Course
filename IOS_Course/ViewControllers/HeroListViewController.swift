@@ -52,13 +52,17 @@ class HeroListViewController: UIViewController, UICollectionViewDataSource, UICo
         
         viewModel.reloadData = { [weak self] in
             DispatchQueue.main.async {
+                self?.heroes = self?.viewModel.getHeroes() ?? []
                 self?.collectionView.reloadData()
                 self?.hideLoader()
             }
         }
-        
+
         viewModel.fetchHeroes()
+                
     }
+    
+    
     
     private func showLoader() {
         DispatchQueue.main.async {
@@ -162,7 +166,7 @@ extension HeroListViewController {
             return UICollectionViewCell()
         }
 
-        cell.configurate(with: viewModel, at: indexPath.item)
+        cell.configurate(with: viewModel.getHeroes(), at: indexPath.item)
         return cell
     }
     

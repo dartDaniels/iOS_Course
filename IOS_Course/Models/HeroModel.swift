@@ -7,31 +7,51 @@
 
 import UIKit
 import Kingfisher
+import RealmSwift
 
-struct HeroModel: Codable {
-    let id: Int
-    let name: String
-    let description: String
-    let thumbnail: ThumbnailModel
+class HeroModel: Object, Decodable {
+    @objc dynamic var id = 0
+    @objc dynamic var name = ""
+    @objc dynamic var heroDescription = ""
+    @objc dynamic var thumbnail: ThumbnailModel?
+
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case heroDescription = "description"
+        case thumbnail
+    }
 }
 
-struct ThumbnailModel: Codable {
-    let path: String
-    let `extension`: String
+class ThumbnailModel: Object, Decodable {
+    @objc dynamic var path = ""
+    @objc dynamic var `extension` = ""
     
     var fullURL: String? {
-            guard !path.isEmpty, !`extension`.isEmpty else {
-                return nil
-            }
-            return "\(path).\(`extension`)"
+        guard !path.isEmpty, !`extension`.isEmpty else {
+            return nil
         }
+        return "\(path).\(`extension`)"
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case path
+        case `extension`
+    }
 }
 
-struct HeroList: Codable {
+struct HeroList: Decodable {
     let data: HeroData
 }
 
-struct HeroData: Codable {
+struct HeroData: Decodable {
     let results: [HeroModel]
+    
+    enum CodingKeys: String, CodingKey {
+        case results
+    }
 }
-

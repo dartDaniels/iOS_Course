@@ -15,16 +15,16 @@ class HeroCollectionViewCell: UICollectionViewCell {
     
     let viewModel = HeroViewModel()
 
-    func configurate(with viewModel: HeroViewModel, at index: Int) {
-        let hero = viewModel.getHero(at: index)
+    func configurate(with heroes: [HeroModel], at index: Int) {
+        let hero = heroes[index]
         heroName.text = hero.name
-                
-        if let fullImageURL = hero.thumbnail.fullURL, let url = URL(string: fullImageURL) {
-                    imageView.kf.setImage(with: url, placeholder: Images.heroPlaceholder)
-                } else {
-                    imageView.image = Images.heroPlaceholder
-                }
-            }
+        
+        if let fullImageURL = hero.thumbnail?.fullURL, let url = URL(string: fullImageURL) {
+            imageView.kf.setImage(with: url, placeholder: Images.heroPlaceholder)
+        } else {
+            imageView.image = Images.heroPlaceholder
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

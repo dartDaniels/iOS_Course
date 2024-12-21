@@ -8,10 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		6432DA1E2D0F869B0057BABC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6432DA1D2D0F869B0057BABC /* Alamofire */; };
+		6432DA6A2D1773EA0057BABC /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6432DA692D1773EA0057BABC /* RealmSwift */; };
+		6432DA6B2D177B740057BABC /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 6432DA692D1773EA0057BABC /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		64A39AB82CC84961001C3176 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 64A39AB72CC84961001C3176 /* SnapKit */; };
 		64B067262CCE583E00612233 /* CollectionViewPagingLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 64B067252CCE583E00612233 /* CollectionViewPagingLayout */; };
 		64E545952CF3CD8500929C70 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 64E545942CF3CD8500929C70 /* Kingfisher */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6432DA6C2D177B740057BABC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6432DA6B2D177B740057BABC /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		64F55B302CABBF2400B703F1 /* IOS_Course.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IOS_Course.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +62,7 @@
 				64E545952CF3CD8500929C70 /* Kingfisher in Frameworks */,
 				6432DA1E2D0F869B0057BABC /* Alamofire in Frameworks */,
 				64A39AB82CC84961001C3176 /* SnapKit in Frameworks */,
+				6432DA6A2D1773EA0057BABC /* RealmSwift in Frameworks */,
 				64B067262CCE583E00612233 /* CollectionViewPagingLayout in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +96,7 @@
 				64F55B2C2CABBF2400B703F1 /* Sources */,
 				64F55B2D2CABBF2400B703F1 /* Frameworks */,
 				64F55B2E2CABBF2400B703F1 /* Resources */,
+				6432DA6C2D177B740057BABC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -93,6 +111,7 @@
 				64B067252CCE583E00612233 /* CollectionViewPagingLayout */,
 				64E545942CF3CD8500929C70 /* Kingfisher */,
 				6432DA1D2D0F869B0057BABC /* Alamofire */,
+				6432DA692D1773EA0057BABC /* RealmSwift */,
 			);
 			productName = IOS_Course;
 			productReference = 64F55B302CABBF2400B703F1 /* IOS_Course.app */;
@@ -127,6 +146,7 @@
 				64B067242CCE583E00612233 /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */,
 				64E545932CF3CD8500929C70 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				6432DA1C2D0F869B0057BABC /* XCRemoteSwiftPackageReference "Alamofire" */,
+				6432DA682D1773EA0057BABC /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 64F55B312CABBF2400B703F1 /* Products */;
@@ -364,6 +384,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		6432DA682D1773EA0057BABC /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		64A39AB62CC84961001C3176 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -395,6 +423,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6432DA1C2D0F869B0057BABC /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		6432DA692D1773EA0057BABC /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6432DA682D1773EA0057BABC /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 		64A39AB72CC84961001C3176 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
